@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wedding IV</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: #111;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow: hidden;
+      font-family: "Poppins", sans-serif;
+      color: #fff;
+    }
+
+    /* Portrait ratio (612 × 492 pt) */
+    .flip-container {
+      height: 85vh; /* reduced from 95vh */
+      width: calc(85vh * 0.804); /* maintain aspect ratio */
+      max-width: 95vw;
+      position: relative;
+      perspective: 2000px;
+      cursor: pointer;
+    }
+
+    .page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      backface-visibility: hidden;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: rotateY(0deg);
+      transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    }
+
+    .page:nth-child(1) { background-image: url('front.webp'); }
+    .page:nth-child(2) { background-image: url('inside.jpg'); }
+    .page:nth-child(3) { background-image: url('back.webp'); }
+
+    .page.active {
+      opacity: 1;
+      transform: rotateY(0deg);
+      z-index: 3;
+    }
+
+    .page.previous {
+      opacity: 0;
+      transform: rotateY(-180deg);
+      z-index: 1;
+    }
+
+    .hint {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 1rem;
+      opacity: 0.9;
+      max-width: 90%;
+      line-height: 1.4;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 600px) {
+      .flip-container {
+        height: 75vh;
+        width: calc(75vh * 0.804);
+        max-width: 90vw;
+      }
+
+      .hint {
+        font-size: 0.9rem;
+        margin-top: 10px;
+        padding: 0 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="flip-container" id="flipContainer">
+    <div class="page active"></div>
+    <div class="page"></div>
+    <div class="page"></div>
+  </div>
+
+  <div class="hint">This is our wedding IV. Tap to view the next page ❤️</div>
+
+  <audio id="bgAudio" src="audio.mp3" autoplay loop></audio>
+
+  <script>
+    const pages = document.querySelectorAll('.page');
+    const flipContainer = document.getElementById('flipContainer');
+    let index = 0;
+
+    flipContainer.addEventListener('click', () => {
+      const current = pages[index];
+      index = (index + 1) % pages.length;
+      const next = pages[index];
+
+      current.classList.remove('active');
+      current.classList.add('previous');
+
+      next.classList.add('active');
+      next.classList.remove('previous');
+    });
+
+    const audio = document.getElementById('bgAudio');
+    document.body.addEventListener('click', () => {
+      if (audio.paused) audio.play();
+    });
+  </script>
+</body>
+</html>
